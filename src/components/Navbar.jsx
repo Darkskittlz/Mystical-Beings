@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Menu, Typography, Avatar } from 'antd';
 import { Link } from 'react-router-dom'
-import { HomeOutlined, BulbOutlined, FundOutlined, MenuOutlined, ContactsOutlined, BellOutlined } from '@ant-design/icons'
+import { HomeOutlined, BulbOutlined, FundOutlined, MenuOutlined, ContactsOutlined, BellOutlined, CrownOutlined, StarFilled, StarOutlined, TeamOutlined } from '@ant-design/icons'
 import icon from '../assets/react-one.jpg'
 import { isDisabled } from '@testing-library/user-event/dist/utils';
 import styled from 'styled-components';
@@ -54,13 +54,19 @@ const Navbar = () => {
                         <Link to="/">Home</Link>
                     </Menu.Item>
                     <Menu.Item icon={<BulbOutlined />}>
-                        <Link to="/ts1">#1</Link>
+                        <Link to="/Intention">Intentional Jewelry</Link>
+                    </Menu.Item>
+                    <Menu.Item icon={<CrownOutlined />}>
+                        <Link to="/Oracle">Oracle Commission</Link>
+                    </Menu.Item>
+                    <Menu.Item icon={<StarOutlined />}>
+                        <Link to="/Prints">Prints</Link>
                     </Menu.Item>
                     <Menu.Item icon={<FundOutlined />}>
-                        <Link to="/ts2">#2</Link>
+                        <Link to="/Shop">Shop</Link>
                     </Menu.Item>
-                    <Menu.Item icon={<ContactsOutlined />}>
-                        <Link to="/ts3">#3</Link>
+                    <Menu.Item icon={<TeamOutlined />}>
+                        <Link to="/TwoSouls">Two Souls</Link>
                     </Menu.Item>
 
                 </Menu>
