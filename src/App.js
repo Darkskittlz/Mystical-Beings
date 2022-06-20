@@ -1,8 +1,9 @@
 import React from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
 import { Layout, Typography, Space } from 'antd'
-import { Homepage, Navbar } from './components'
+import { Navbar, Homepage, Intention, Oracle, Prints, Shop, TwoSouls } from './components'
 import './App.css'
+import ParticleBackground from './components/ParticleBackground'
 
 const App = () => {
     return (
@@ -12,10 +13,16 @@ const App = () => {
             </div>
             <div className='main'>
                 <Layout>
+                    {/* <ParticleBackground style={{zIndex: "0"}}/> */}
                     <div className='routes'>
                         <Routes>
                             <Route path='/' element={<Homepage />} />                            
-                        </Routes>
+                            <Route path='/Intention' element={<Intention />} />                            
+                            <Route path='/Oracle' element={<Oracle />} />  
+                            <Route path='/Prints' element={<Prints />} />  
+                            <Route path='/Shop' element={<Shop />} />                            
+                            <Route path='/TwoSouls' element={<TwoSouls />} />                            
+                        </Routes>                       
                     </div>
                 </Layout>
                 {/* <div className='footer'>

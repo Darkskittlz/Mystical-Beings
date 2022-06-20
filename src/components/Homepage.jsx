@@ -1,148 +1,43 @@
 import '../App.css';
 import React, { Suspense, useCallback, useMemo, useRef } from 'react';
-import { Canvas, extend, useFrame, useLoader, useThree } from 'react-three-fiber';
-import typewriter from '../assets/notMyType.otf';
-import * as THREE from 'three';
-import circleImg from '../assets/YinYang2.png';
-import { fadeImages } from '../constants/constants';
-import styled from 'styled-components';
 import { Fade } from 'react-slideshow-image';
-import 'react-slideshow-image/dist/styles.css'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-extend({ OrbitControls })
+import { fadeImages } from '../constants/constants';
+import ParticleBackground from './ParticleBackground';
+import styled from 'styled-components';
 
-
-function CameraControls() {
-    const {
-        camera,
-        gl: { domElement }
-    } = useThree();
-
-    const controlsRef = useRef();
-    useFrame(() => controlsRef.current.update())
-
-    return (
-        <orbitControls
-            ref={controlsRef}
-            args={[camera, domElement]}
-            autoRotate
-            autoRotateSpeed={-0.2}
-        />
-    )
-}
-
-function Points() {
-    const imgTex = useLoader(THREE.TextureLoader, circleImg);
-    const bufferRef = useRef();
-
-    let t = 0;
-    let f = 0.002;
-    let a = 4;
-
-    const graph = useCallback((x, z) => {
-        return Math.sin(f * (x ** 2 + z ** 2 + t)) * a;
-    }, [t, f, a])
-
-
-    //count = number of points along one axis
-    const count = 100
-
-    //sep = seperation or distance between each point
-    const sep = 3
-    let positions = useMemo(() => {
-        let positions = []
-
-        for (let xi = 0; xi < count; xi++) {
-            for (let zi = 0; zi < count; zi++) {
-                let x = sep * (xi - count / 2);
-                let z = sep * (zi - count / 2);
-                let y = graph(x, z);
-                positions.push(x, y, z);
-            }
-        }
-
-        return new Float32Array(positions);
-    }, [count, sep, graph])
-
-    useFrame(() => {
-        t += 15
-        const positions = bufferRef.current.array;
-
-        let i = 0;
-        for (let xi = 0; xi < count; xi++) {
-            for (let zi = 0; zi < count; zi++) {
-                let x = sep * (xi - count / 2);
-                let z = sep * (zi - count / 2);
-
-                positions[i + 1] = graph(x, z);
-                i += 3;
-            }
-        }
-
-        bufferRef.current.needsUpdate = true;
-    })
-
-    return (
-        <points>
-            <bufferGeometry attach="geometry">
-                <bufferAttribute
-                    ref={bufferRef}
-                    attachObject={['attributes', 'position']}
-                    count={positions.length / 3}
-                    itemSize={3}
-                    array={positions}
-                />
-            </bufferGeometry>
-
-            <pointsMaterial
-                attach="material"
-                map={imgTex}
-                color={0x00AAFF}
-                size={0.5}
-                sizeAttenuation
-                transparent={false}
-                alphaTest={0.5}
-                opacity={1.0}
-            />
-        </points>
-    )
-}
-
-function AnimationCanvas() {
-    return (
-        <Canvas
-            colorManagement={false}
-            camera={{ position: [100, 10, 0], fov: 75 }}
-        >
-            <Suspense fallback={null}>
-                <Points />
-            </Suspense>
-            <CameraControls />
-        </Canvas>
-    );
-}
-
-const TitleBox = styled.div`
+const TitleContainer = styled.div`
+    height: 100%;
+    width: 100%;
     display: flex;
-    position: fixed;
-    z-index: 998;
-    width: calc(100% - 200px);
     justify-content: center;
-    margin-top: 70px;
-    @media (max-width: 860px){
-        display: flex;
-        justify-content: center;
-        width: 100%;
+    align-content: center;
+    background-color: black;
+    z-index: 999;
+`
+const Title = styled.div`
+    display: flex;
+    width: 5%;
+    display: flex;
+    justify-content: center;
+    border-radius: 10px;
+    margin-top: 10px;
+    background-color: black;
+    background: linear-gradient(90deg, rgba(225,252,255,0.15545243619489557) 0%, rgba(225,252,255,0.17169373549883993) 35%);    
+
+    backdrop-filter: blur(10px);
+
+    h1 {
+        margin-top: 10px;
+        color: white;
+        font-size: 25px;
+        z-index:999;
     }
 `
 
-const Title = styled.h1`
-    font-size: 70px;
-    font-family: 'Yellowtail', cursive;
-    margin-bottom: 0;
-    color: white;
+const GridContainer = styled.div`
+    height: 100%;
+    width: 100%;
 `
-
 
 const Body = styled.div`
     display: flex;
@@ -169,7 +64,7 @@ const Body = styled.div`
 `
 
 const Card = styled.div`
-        height: 100%;
+        height: 75%;
         width: 100%;
         flex-direction: column;
         backdrop-filter: blur(4px);
@@ -184,7 +79,7 @@ const Card = styled.div`
 
             @media (max-width: 860px){
             height: 100%;
-        }
+            }
         }
 
         h1 {
@@ -193,6 +88,15 @@ const Card = styled.div`
             color: white;
             width: 100%;
             text-align: center;
+            z-index: 999;
+        }
+
+        h2 {
+            font-size: 20px;
+            font-family: "notMyType";
+            color: white;
+            width: 100%;
+            text-align: left;
             z-index: 999;
         }
 
@@ -210,41 +114,32 @@ const Card = styled.div`
         }
     `
 
-
-
-
-const ProductGrid = () => {
+const HomepageGrid = () => {
     return (
         <>
             <Body>
-                <Fade>
-                    {fadeImages.map((fadeImage, index) => (
-                        <div className="each-fade" key={index}>
-                            <Card>
-                                <img src={fadeImage.url} />
-                            </Card>
-                            <h2>{fadeImage.caption}</h2>
-                        </div>
-                    ))}
-                </Fade>
+                <Card>
+                    <h1>Bio</h1>
+                    <br />
+                    <h1>Anastasia</h1>
+                    <br />
+                    <h2>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit sint minima atque quo illo eius! Aliquam vero dolores impedit possimus doloribus non fugit, doloremque recusandae alias, natus enim at cumque!</h2>
+                    <br />
+                    <h1>Collin</h1>
+                    <br />
+                    <h2>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vero est, pariatur, laboriosam mollitia rerum eaque, vitae corrupti accusamus tempore magnam quia placeat alias. Nulla similique vitae dolor cum! Sed, neque!</h2>
+                </Card>
             </Body>
         </>
     )
 }
 
-
-
-
 const Homepage = () => {
     return (
-        <>
-            <TitleBox><Title>Bio</Title></TitleBox>
-            <div className="anim">
-                <Suspense fallback={<div>Loading...</div>}>
-                    <AnimationCanvas />
-                </Suspense>
-            </div>
-        </>
+        <GridContainer>
+            <HomepageGrid />
+            <ParticleBackground />
+        </GridContainer>
     );
 };
 

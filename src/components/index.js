@@ -1,3 +1,7 @@
 export { default as Navbar } from './Navbar'
 export { default as Homepage } from './Homepage'
-export { default as Ts1 } from './Ts1'
+export { default as Intention } from './Intention'
+export { default as  Oracle } from './Oracle'
+export { default as  Prints } from './Prints'
+export { default as  Shop } from './Shop'
+export { default as  TwoSouls } from './TwoSouls'

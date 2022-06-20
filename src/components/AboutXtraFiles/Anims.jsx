@@ -1,4 +1,4 @@
-import { MeshAnim } from "../Ts1";
+import { MeshAnim } from "../Lava";
 import noise, { perlin3 } from "./noise";
 import { randomSin } from './Math';
 
